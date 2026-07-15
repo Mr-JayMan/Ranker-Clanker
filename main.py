@@ -14,6 +14,7 @@ EXTENSIONS = (
     "commands.boards",
 )
 
+
 class RankerClankerBot(commands.Bot):
     def __init__(self) -> None:
         intents = discord.Intents.default()
@@ -24,19 +25,20 @@ class RankerClankerBot(commands.Bot):
             intents=intents,
         )
 
-async def setup_hook(self) -> None:
-    await connect_database()
-    await create_schema()
+    async def setup_hook(self) -> None:
+        print("Connecting to PostgreSQL...")
+        await connect_database()
 
-    for extension in EXTENSIONS:
-        await self.load_extension(extension)
-        print(f"Loaded extension: {extension}")
+        await create_schema()
 
-    synced_commands = await self.tree.sync()
+        for extension in EXTENSIONS:
+            await self.load_extension(extension)
+            print(f"Loaded extension: {extension}")
 
-    print(
-        f"Synced {len(synced_commands)} slash command(s)."
-    )
+        synced_commands = await self.tree.sync()
+
+        print(f"Synced {len(synced_commands)} slash command(s).")
+
     async def close(self) -> None:
         await close_database()
         await super().close()

@@ -12,6 +12,7 @@ from database.schema import create_schema
 
 EXTENSIONS = (
     "commands.boards",
+    "commands.board_display",
 )
 
 

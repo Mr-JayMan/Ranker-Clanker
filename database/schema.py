@@ -162,4 +162,19 @@ async def create_schema() -> None:
         """
     )
 
+    await execute(
+        """
+        ALTER TABLE boards
+        ADD COLUMN IF NOT EXISTS display_channel_id BIGINT;
+        """
+    )
+
+    await execute(
+        """
+        ALTER TABLE boards
+        ADD COLUMN IF NOT EXISTS display_message_id BIGINT;
+        """
+    )
+
+
     print("Database tables ready.")

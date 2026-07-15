@@ -29,15 +29,14 @@ async def setup_hook(self) -> None:
     await create_schema()
 
     for extension in EXTENSIONS:
-    await self.load_extension(extension)
-    print(f"Loaded extension: {extension}")
+        await self.load_extension(extension)
+        print(f"Loaded extension: {extension}")
 
     synced_commands = await self.tree.sync()
 
-        print(
-            f"Synced {len(synced_commands)} slash command(s)."
-        )
-
+    print(
+        f"Synced {len(synced_commands)} slash command(s)."
+    )
     async def close(self) -> None:
         await close_database()
         await super().close()

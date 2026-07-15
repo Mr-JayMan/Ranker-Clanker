@@ -10,6 +10,10 @@ from database.connection import (
 )
 from database.schema import create_schema
 
+EXTENSIONS = (
+    "commands.boards",
+)
+
 class RankerClankerBot(commands.Bot):
     def __init__(self) -> None:
         intents = discord.Intents.default()
@@ -23,6 +27,10 @@ class RankerClankerBot(commands.Bot):
 async def setup_hook(self) -> None:
     await connect_database()
     await create_schema()
+
+    for extension in EXTENSIONS:
+    await self.load_extension(extension)
+    print(f"Loaded extension: {extension}")
 
     synced_commands = await self.tree.sync()
 

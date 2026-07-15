@@ -8,7 +8,7 @@ from database.connection import (
     close_database,
     connect_database,
 )
-
+from database.schema import create_schema
 
 class RankerClankerBot(commands.Bot):
     def __init__(self) -> None:
@@ -20,10 +20,11 @@ class RankerClankerBot(commands.Bot):
             intents=intents,
         )
 
-    async def setup_hook(self) -> None:
-        await connect_database()
+async def setup_hook(self) -> None:
+    await connect_database()
+    await create_schema()
 
-        synced_commands = await self.tree.sync()
+    synced_commands = await self.tree.sync()
 
         print(
             f"Synced {len(synced_commands)} slash command(s)."

@@ -176,5 +176,12 @@ async def create_schema() -> None:
         """
     )
 
-
+    await execute(
+        """
+        ALTER TABLE leaderboard_entries
+        ADD COLUMN IF NOT EXISTS losses_while_holding INTEGER
+        NOT NULL DEFAULT 0;
+        """
+    )
+    
     print("Database tables ready.")

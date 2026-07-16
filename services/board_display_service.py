@@ -37,7 +37,21 @@ async def build_board_embed(
         for entry in entries
     }
 
-    lines: list[str] = []
+    embed = discord.Embed(
+        title=f"🏆 {board['name']} Leaderboard",
+        description=(
+            "Current competitive standings\n"
+            "━━━━━━━━━━━━━━━━━━━━"
+        ),
+        color=discord.Color.gold(),
+        timestamp=discord.utils.utcnow(),
+    )
+
+    position_icons = {
+        1: "🥇",
+        2: "🥈",
+        3: "🥉",
+    }
 
     for position in range(
         1,
@@ -48,7 +62,7 @@ async def build_board_embed(
         )
 
         if entry is None:
-            display_name = "*Empty*"
+            display_name = "*Empty Slot*"
             wins = 0
 
         elif entry["discord_user_id"] is not None:
@@ -59,34 +73,32 @@ async def build_board_embed(
 
         else:
             display_name = (
-                f"**{entry['team_name']}**"
+                f"⚔️ **{entry['team_name']}**"
             )
             wins = entry["wins_while_holding"]
 
-        lines.append(
-            (
-                f"**#{position}** — {display_name} "
-                f"· `{wins} win"
-                f"{'' if wins == 1 else 's'}`"
-            )
+        icon = position_icons.get(
+            position,
+            "▫️",
         )
 
-    embed = discord.Embed(
-        title=f"🏆 {board['name']} Leaderboard",
-        description="\n".join(lines),
-        color=discord.Color.gold(),
-        timestamp=discord.utils.utcnow(),
-    )
+        embed.add_field(
+            name=f"{icon} Position #{position}",
+            value=(
+                f"{display_name}\n"
+                f"🏅 **Wins:** `{wins}`"
+            ),
+            inline=False,
+        )
 
     embed.set_footer(
         text=(
             f"{board['slot_count']} positions "
-            "· Ranker Clanker"
+            "• Ranker Clanker"
         )
     )
 
     return embed
-
 
 async def publish_board(
     bot: discord.Client,

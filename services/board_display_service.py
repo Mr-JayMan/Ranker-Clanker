@@ -47,7 +47,7 @@ async def build_board_embed(
         timestamp=discord.utils.utcnow(),
     )
 
-    position_icons = {
+    medal_icons = {
         1: "🥇",
         2: "🥈",
         3: "🥉",
@@ -73,20 +73,29 @@ async def build_board_embed(
 
         else:
             display_name = (
-                f"⚔️ **{entry['team_name']}**"
+                f"**{entry['team_name']}**"
             )
             wins = entry["wins_while_holding"]
 
-        icon = position_icons.get(
-            position,
-            "▫️",
+        medal = medal_icons.get(
+            position
         )
 
+        if medal:
+            field_name = (
+                f"Position #{position}\n"
+                f"{medal} {display_name}"
+            )
+        else:
+            field_name = (
+                f"Position #{position}\n"
+                f"{display_name}"
+            )
+
         embed.add_field(
-            name=f"{icon} Position #{position}",
+            name=field_name,
             value=(
-                f"{display_name}\n"
-                f"🏅 **Wins:** `{wins}`"
+                f"⚔️ **Wins:** `{wins}`"
             ),
             inline=False,
         )

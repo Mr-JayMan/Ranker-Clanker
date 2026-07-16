@@ -11,6 +11,7 @@ async def get_board_entries(
         SELECT
             entries.position,
             entries.wins_while_holding,
+            entries.losses_while_holding,
             players.discord_user_id,
             teams.name AS team_name
         FROM leaderboard_entries AS entries
@@ -64,22 +65,23 @@ async def build_board_embed(
         if entry is None:
             display_name = "*Empty Slot*"
             wins = 0
+            losses = 0
 
         elif entry["discord_user_id"] is not None:
             display_name = (
                 f"<@{entry['discord_user_id']}>"
             )
             wins = entry["wins_while_holding"]
+            losses = entry["losses_while_holding"]
 
         else:
             display_name = (
                 f"**{entry['team_name']}**"
             )
             wins = entry["wins_while_holding"]
+            losses = entry["losses_while_holding"]
 
-        medal = medal_icons.get(
-            position
-        )
+        medal = medal_icons.get(position)
 
         if medal:
             field_name = (
@@ -95,7 +97,8 @@ async def build_board_embed(
         embed.add_field(
             name=field_name,
             value=(
-                f"⚔️ **Wins:** `{wins}`"
+                f"⚔️ **Wins:** `{wins}`\n"
+                f"💀 **Losses:** `{losses}`"
             ),
             inline=False,
         )
